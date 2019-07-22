@@ -7,6 +7,8 @@
 #define UI_FRAME              0x03
 #define APRS_PID              0xF0
 
+#define CALLSIGN_SIZE         6
+#define SPACE_ASCII           0x20
 #define DEFAULT_SSID          0
 
 // POSITION
@@ -34,8 +36,8 @@ class APRSClass {
   public:
     APRSClass(char * destination, char * source, int destinationSsid, int sourceSsid);
     virtual ~APRSClass();
-    void setDestination(char * destination, int ssid);
-    void setSource(char * source, int ssid);
+    int setDestination(char * destination, int ssid);
+    int setSource(char * source, int ssid);
     char * createPosition(const float latitude, const float longitude, char * comments);
     char * createWeather(const int month, const int day, const int hour, const int minute,
       const float windDirection, const float windSpeed, const float temperature,

@@ -112,14 +112,52 @@ char *APRSClass::longitudeToAPRS(const float longitude) {
   return longitudeAPRS;
 }
 
-void APRSClass::setDestination(char * destination, int ssid) {
-  _destination = destination;
-  _destinationSsid = ssid;
+int APRSClass::setDestination(char * destination, int ssid) {
+  int i;
+  if (strlen(destination) == CALLSIGN_SIZE) {
+    _destination = destination;
+  }
+  else if (strlen(destination) < CALLSIGN_SIZE) {
+    strcpy(_destination, destination);
+    for (i = strlen(destination); i < CALLSIGN_SIZE; i++) {
+      _destination[i] = SPACE_ASCII;
+    }
+  }
+  else {
+    return -1;
+  }
+
+  if (ssid && ssid < 14) {
+    _destinationSsid = ssid;
+    return 0;
+  }
+  else {
+    return -1;
+  }
 }
 
-void APRSClass::setSource(char * source, int ssid) {
-  _source = source;
-  _sourceSsid = ssid;
+int APRSClass::setSource(char * source, int ssid) {
+  int i;
+  if (strlen(source) == CALLSIGN_SIZE) {
+    _source = source;
+  }
+  else if (strlen(source) < CALLSIGN_SIZE) {
+    strcpy(_source, source);
+    for (i = strlen(source); i < CALLSIGN_SIZE; i++) {
+      _source[i] = SPACE_ASCII;
+    }
+  }
+  else {
+    return -1;
+  }
+
+  if (ssid && ssid < 14) {
+    _sourceSsid = ssid;
+    return 0;
+  }
+  else {
+    return -1;
+  }
 }
 
 
@@ -135,4 +173,4 @@ char * APRSClass::aton(char * callsign, int ssid) {
   return networkCallsign;
 }
 
-APRSClass APRS(TRACKR, DEFAULT_DESTINATION, DEFAULT_SSID, DEFAULT_SSID);
+APRSClass APRS(DEFAULT_DESTINATION, TRACKR, DEFAULT_SSID, DEFAULT_SSID);

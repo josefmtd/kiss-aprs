@@ -9,6 +9,11 @@
 
 #define DEFAULT_SSID          0
 
+#define LATITUDE_DEGREE_SIZE  2
+#define LONGITUDE_DEGREE_SIZE 3
+#define MINUTE_STRING_SIZE    5
+#define MINUTE_AFTER_DECIMAL  2
+#define HEMISPHERE_SIZE       1
 #define NORTH                 0x4E
 #define SOUTH                 0x53
 #define WEST                  0x57

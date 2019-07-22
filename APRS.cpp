@@ -63,34 +63,46 @@ char * APRSClass::createPosition(const float latitude, const float longitude, ch
   return positionString;
 }
 
-char *APRSClass::longitudeToAPRS(const float longitude) {
-  char *longitudeAPRS = (char*)malloc(sizeof(char)*10);
-
-  int degreeLongitude = abs((int) longitude);
-  float minuteLongitude = (abs(longitude) - degreeLongitude)*60;
-  char hemisphere = (longitude > 0) ? EAST : WEST;
-
-  char * buf = (char*)malloc(sizeof(char)*6);
-  dtostrf(minuteLongitude, 5, 2, buf);
-
-  sprintf(longitudeAPRS, "%03d%s%c", degreeLongitude, buf, hemisphere);
-  return longitudeAPRS;
-}
-
 char *APRSClass::latitudeToAPRS(const float latitude) {
-  char *latitudeAPRS = (char*)malloc(sizeof(char)*9);
-
   int degreeLatitude = abs((int) latitude);
   float minuteLatitude = (abs(latitude) - degreeLatitude)*60;
   char hemisphere = (latitude > 0) ? NORTH : SOUTH;
 
-  char * buf = (char*)malloc(sizeof(char)*6);
-  dtostrf(minuteLatitude, 5, 2, buf);
+  char * minuteBuffer = (char*)malloc(sizeof(char)*(MINUTE_STRING_SIZE + 1));
+  dtostrf(minuteLatitude, MINUTE_STRING_SIZE, MINUTE_AFTER_DECIMAL, minuteBuffer);
 
-  sprintf(latitudeAPRS, "%02d%s%c", degreeLatitude, buf, hemisphere);
-  free(buf);
+  char *latitudeAPRS = (char*)malloc(sizeof(char)*(MINUTE_STRING_SIZE + LATITUDE_DEGREE_SIZE + HEMISPHERE_SIZE + 1));
+  sprintf(latitudeAPRS, "%02d%s%c", degreeLatitude, minuteBuffer, hemisphere);
+  free(minuteBuffer);
+
   return latitudeAPRS;
 }
+
+char *APRSClass::longitudeToAPRS(const float longitude) {
+  int degreeLongitude = abs((int) longitude);
+  float minuteLongitude = (abs(longitude) - degreeLongitude)*60;
+  char hemisphere = (longitude > 0) ? EAST : WEST;
+
+  char * minuteBuffer = (char*)malloc(sizeof(char)*(MINUTE_STRING_SIZE + 1));
+  dtostrf(minuteLongitude, MINUTE_STRING_SIZE, MINUTE_AFTER_DECIMAL, minuteBuffer);
+
+  char *longitudeAPRS = (char*)malloc(sizeof(char)*(MINUTE_STRING_SIZE + LONGITUDE_DEGREE_SIZE + HEMISPHERE_SIZE + 1));
+  sprintf(longitudeAPRS, "%03d%s%c", degreeLongitude, minuteBuffer, hemisphere);
+  free(minuteBuffer);
+
+  return longitudeAPRS;
+}
+
+void APRSClass::setDestination(char * destination, int ssid) {
+  _destination = destination;
+  _destinationSsid = ssid;
+}
+
+void APRSClass::setSource(char * source, int ssid) {
+  _source = source;
+  _sourceSsid = ssid;
+}
+
 
 char * APRSClass::aton(char * callsign, int ssid) {
   int i;

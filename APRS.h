@@ -9,6 +9,7 @@
 
 #define DEFAULT_SSID          0
 
+// POSITION
 #define LATITUDE_DEGREE_SIZE  2
 #define LONGITUDE_DEGREE_SIZE 3
 #define MINUTE_STRING_SIZE    5
@@ -18,6 +19,13 @@
 #define SOUTH                 0x53
 #define WEST                  0x57
 #define EAST                  0x45
+
+// TELEMETRY
+#define TELEMETRY_STRING_SIZE 34
+
+// WEATHER
+#define RAW_TIMESTAMP_SIZE    8
+#define RAW_WEATHER_SIZE      38
 
 static char TRACKR[7]              = {0x54, 0x52, 0x41, 0x43, 0x4B, 0x52, 0x00};
 static char DEFAULT_DESTINATION[7] = {0x41, 0x50, 0x5A, 0x49, 0x4E, 0x41, 0x00};
@@ -33,6 +41,10 @@ class APRSClass {
       const float windDirection, const float windSpeed, const float temperature,
       const float gust, const float rain, const float humidity,
       const float barometricPressure);
+    char * createTelemetry(int counter, int analogValue1, int analogValue2,
+        int analogValue3, int analogValue4, int analogValue5, boolean bit0,
+        boolean bit1, boolean bit2, boolean bit3, boolean bit4, boolean bit5,
+        boolean bit6, boolean bit7);
   private:
     char * aton(char * callsign, int ssid);
     char * longitudeToAPRS(const float longitude);

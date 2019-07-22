@@ -24,16 +24,35 @@ char * APRSClass::createHeader(char * destination, char * source, int destinatio
   return header;
 }
 
+char * APRSClass::createTelemetry(int counter, int analogValue1, int analogValue2,
+  int analogValue3, int analogValue4, int analogValue5, boolean bit0,
+  boolean bit1, boolean bit2, boolean bit3, boolean bit4, boolean bit5,
+  boolean bit6, boolean bit7) {
+    char * header = createHeader(_destination, _source, _destinationSsid, _sourceSsid);
+
+    char * telemetryString = (char*)malloc(sizeof(char)*(TELEMETRY_STRING_SIZE + 1));
+    sprintf(telemetryString, "T#%03d,%03d,%03d,%03d,%03d,%03d,%d%d%d%d%d%d%d%d",
+      counter, analogValue1, analogValue2, analogValue3, analogValue4,
+      analogValue5, bit0, bit1, bit2, bit3, bit4, bit5, bit6, bit7);
+
+    char * telemetry = (char*)malloc(sizeof(char)*(strlen(header) + strlen(telemetryString) + 1));
+    sprintf(telemetry, "%s%s", header, telemetryString);
+    free(telemetryString);
+    free(header);
+
+    return telemetry;
+  }
+
 char * APRSClass::createWeather(const int month, const int day, const int hour, const int minute,
   const float windDirection,
   const float windSpeed, const float temperature, const float gust,
   const float rain, const float humidity, const float barometricPressure) {
     char * header = createHeader(_destination, _source, _destinationSsid, _sourceSsid);
 
-    char * timeStamp = (char*)malloc(sizeof(char)*9);
+    char * timeStamp = (char*)malloc(sizeof(char)*(RAW_TIMESTAMP_SIZE + 1));
     sprintf(timeStamp, "%02d%02d%02d%02d", month, day, hour, minute);
 
-    char * weatherString = (char*)malloc(sizeof(char)*39);
+    char * weatherString = (char*)malloc(sizeof(char)*(RAW_WEATHER_SIZE + 1));
     sprintf(weatherString, "_%sc%03ds%03dg%03dt%03dr%03dh%02db%05d", timeStamp,
       (int)windDirection, (int)windSpeed, (int)gust, (int)temperature,
       (int)rain, (int)humidity, (int)barometricPressure);
